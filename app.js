@@ -16,6 +16,19 @@ function addTask() {
         let span = document.createElement('span')
         span.innerHTML = '\u00d7'
         li.appendChild(span)
+        
+        let spanEdit = document.createElement('span');
+        spanEdit.innerHTML = '&#9998;'; // Edit icon
+        li.appendChild(spanEdit);
+
+        // Attach click event for editing task
+        spanEdit.addEventListener('click', function () {
+            let updatedTask = prompt('Edit task:', li.innerHTML);
+            if (updatedTask !== null) {
+                li.innerHTML = updatedTask;
+                saveData();
+            }
+        });
     }
     taskInput.value = ''
     saveData()
@@ -28,7 +41,14 @@ taskList.addEventListener('click', function (e) {
     } else if (e.target.tagName === 'SPAN') {
         e.target.parentElement.remove();
         saveData();
+    } else if (e.target.tagName === 'SPAN' && e.target.innerHTML === '&#9998;') {
+        let updatedTask = prompt('Edit task:', e.target.parentElement.innerHTML);
+        if (updatedTask !== null) {
+            e.target.parentElement.innerHTML = updatedTask;
+            saveData();
+        }
     }
+
 }, false);
 
 function saveData() {
@@ -39,3 +59,4 @@ function showTask() {
     taskList.innerHTML = localStorage.getItem('data')
 }
 showTask()
+
