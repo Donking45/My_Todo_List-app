@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Simple To-do List</title>
-        <link rel="stylesheet" href="style.css">
-        <script defer src="app.js"></script>
-    </head>
-    <body>
-        <div class="container">
-        <div class = "todo-app">
-            <h2> My To-do List <img src ="images/background-pix.jpg"></h2>
-            <div class ="row">
-                <input type="text" id="taskInput" placeholder="Add a new task">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple To-do List</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="app.js"></script>
+</head>
+<body>
+    <section class="container">
+        <div class="todo-app">
+            <h2>My To-Do List </h2>
+            <div class="row">
+                <label for="taskInput">Add A Task:</label>
+                <input type="text" id="taskInput">
                 <button onclick="addTask()">Add</button>
             </div>
-            <ul id="taskList">
-                <li class="checked">To-do 01</li>
-            </ul>
+            <ul class="todo-list" id="taskList"></ul>
         </div>
-        </div>
-    </body>
+    </section>
+</body>
 </html>

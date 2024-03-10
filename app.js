@@ -1,62 +1,65 @@
-const taskInput = document.getElementById('taskInput');
-taskInput.innerHTML = '';
+document.addEventListener("DOMContentLoaded", function() {
+    // Check for saved tasks in localStorage
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-const taskList = document.getElementById('taskList');
-taskList.innerHTML = '';
+    // Display existing tasks
+    const taskList = document.getElementById("taskList");
+    displayTasks(tasks, taskList);
 
-function addTask() {
-    if (taskInput.value === '') {
-        alert('Write New Task')
-    }
-    else {
-        let li = document.createElement('Li')
-        li.innerHTML = taskInput.value
-        taskList.appendChild(li)
+    // Function to add a task
+    window.addTask = function() {
+        const taskInput = document.getElementById("taskInput");
+        const taskText = taskInput.value.trim();
 
-        let span = document.createElement('span')
-        span.innerHTML = '\u00d7'
-        li.appendChild(span)
-        
-        let spanEdit = document.createElement('span');
-        spanEdit.innerHTML = '&#9998;'; // Edit icon
-        li.appendChild(spanEdit);
-
-        // Attach click event for editing task
-        spanEdit.addEventListener('click', function () {
-            let updatedTask = prompt('Edit task:', li.innerHTML);
-            if (updatedTask !== null) {
-                li.innerHTML = updatedTask;
-                saveData();
-            }
-        });
-    }
-    taskInput.value = ''
-    saveData()
-}
-
-taskList.addEventListener('click', function (e) {
-    if (e.target.tagName === 'LI') {
-        e.target.classList.toggle('checked');
-        saveData();
-    } else if (e.target.tagName === 'SPAN') {
-        e.target.parentElement.remove();
-        saveData();
-    } else if (e.target.tagName === 'SPAN' && e.target.innerHTML === '&#9998;') {
-        let updatedTask = prompt('Edit task:', e.target.parentElement.innerHTML);
-        if (updatedTask !== null) {
-            e.target.parentElement.innerHTML = updatedTask;
-            saveData();
+        if (taskText !== "") {
+            tasks.push(taskText);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            taskInput.value = "";
+            displayTasks(tasks, taskList); // Save data after updating tasks
+            saveData(taskList);
         }
-    }
+    };
 
-}, false);
+    // Function to delete a task
+    window.deleteTask = function(index) {
+        tasks.splice(index, 1);
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        displayTasks(tasks, taskList); // Save data after updating tasks
+        saveData(taskList);
+    };
 
-function saveData() {
-    localStorage.setItem('data', taskList.innerHTML)
-} 
+    // Function to update a task
+    window.updateTask = function(index) {
+        const updatedText = prompt("Update task:", tasks[index]);
+        if (updatedText !== null) {
+            tasks[index] = updatedText.trim();
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            displayTasks(tasks, taskList); // Save data after updating tasks
+            saveData(taskList);
+        }
+    };
 
-function showTask() {
-    taskList.innerHTML = localStorage.getItem('data')
+});
+
+function displayTasks(tasks, taskList) {
+    taskList.innerHTML = "";
+
+    tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <span class="task-text">${task}</span>
+            <button onclick="deleteTask(${index})">Delete</button>
+            <button onclick="updateTask(${index})">Update</button>
+        `;
+        taskList.appendChild(li);
+    });
 }
-showTask()
 
+
+function saveData(taskList) {
+    localStorage.setItem('data', taskList.innerHTML);
+}
+
+function showTask(taskList) {
+    taskList.innerHTML = localStorage.getItem('data');
+}
